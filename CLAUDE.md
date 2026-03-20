@@ -57,6 +57,45 @@ knowledge-hub/
     └── repo-summary.md
 ```
 
+## Response Format — Pharma Questions
+
+When answering any drug product / pharma / GMP question, always follow this format:
+
+### Required Citations
+- Every key point must cite **PDA TR# + Section X.X.X**
+- Format: **(PDA TR22, Section 3.2)** or **(TR22 §3.2)**
+- Cross-reference other relevant TRs when the topic spans multiple reports
+
+### Answer Template
+```
+### [Topic Title]
+
+**[Best Practice Point 1]** — [Summary of guidance] **(PDA TRXX, Section X.X)**
+
+**[Best Practice Point 2]** — [Summary of guidance] **(PDA TRXX, Section X.X; TRYY §X.X)**
+
+...
+
+**Cross-References:**
+- See also: TR## Section X.X for [related topic]
+- See also: TR## Section X.X for [related topic]
+```
+
+### Example
+> **Frequency & Number** — Minimum 3 consecutive successful APS for new facility/line/process
+> qualification **(PDA TR22, Section 3.2)**. Periodic requalification twice per year per line,
+> per shift **(TR22 §3.2)**.
+
+### Source Repos
+- Primary source: `PDA_Technical-Report-Knowledge/knowledge/` — contains full-text MDs per report
+- Use `knowledge/INDEX.md` for topic routing across reports
+
+## Knowledge Gaps — Reports to Add
+
+| Report | Title | Why Needed | Referenced By |
+|--------|-------|------------|---------------|
+| TR51 | Biological Indicators for Gas and Vapor-Phase Decontamination Processes: Specification, Manufacture, Control and Use | Core reference for VPHP cycle development — D-value calculations, BI placement strategies, cycle parameter optimization | PtC-12 §Q7.2, Guide No.1 §10.2 |
+
 ## Conventions
 - All notes in Markdown
 - File naming: `YYYY-MM-DD-topic-slug.md`
