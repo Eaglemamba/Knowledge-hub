@@ -56,26 +56,29 @@ async def scrape_account(page, account: dict, cutoff: datetime) -> dict:
         await page.goto(f"https://x.com/{username}", timeout=15000)
         await page.wait_for_timeout(5000)
 
-        # Scroll down slightly to load more tweets beyond pinned
+        # Scroll down to load more tweets
         await page.evaluate("window.scrollBy(0, 800)")
         await page.wait_for_timeout(2000)
 
-        tweet_elements = await page.query_selector_all('[data-testid="tweetText"]')
-        time_elements = await page.query_selector_all("time")
-
-        # Collect timestamps
-        timestamps = []
-        for t in time_elements:
-            dt = await t.get_attribute("datetime")
-            if dt:
-                timestamps.append(dt)
+        # Parse at article level to detect pinned tweets
+        articles = await page.query_selector_all("article")
 
         all_tweets = []
         within_24h = []
 
-        for i, tweet_el in enumerate(tweet_elements[:10]):
-            text = await tweet_el.inner_text()
-            ts_str = timestamps[i] if i < len(timestamps) else None
+        for article in articles[:12]:
+            # Skip pinned tweets
+            article_html = await article.inner_html()
+            if "Pinned" in article_html:
+                continue
+
+            text_el = await article.query_selector('[data-testid="tweetText"]')
+            time_el = await article.query_selector("time")
+            if not text_el or not time_el:
+                continue
+
+            text = await text_el.inner_text()
+            ts_str = await time_el.get_attribute("datetime")
 
             tweet_data = {
                 "text": text.strip(),
