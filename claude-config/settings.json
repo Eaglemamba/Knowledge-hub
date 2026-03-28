@@ -1,0 +1,78 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Task",
+      "TodoWrite"
+    ],
+    "deny": [],
+    "defaultMode": "auto"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"'); if echo \"$cmd\" | grep -qE 'git push.*(--force|-f)'; then printf '{\"continue\":false,\"stopReason\":\"Force push blocked — remove --force/-f, or run manually to confirm.\"}'; exit 2; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "if": "Bash(git push*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command // \"\"' | { read -r cmd; cwd=$(pwd); if echo \"$cwd\" | grep -qi 'health-check'; then if [ -f scripts/generate_dashboard.py ]; then python3 scripts/generate_dashboard.py 2>/dev/null && open reviews/health_dashboard.png 2>/dev/null && echo '{\"systemMessage\": \"Dashboard regenerated and opened for review.\"}'; fi; fi; }",
+            "timeout": 30,
+            "statusMessage": "Checking health dashboard..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Blow.aiff"
+          },
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"Session ending — did you log insights to insight.md?\"}'"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-hud/claude-hud/*/ 2>/dev/null | awk -F/ '\"'\"'{ print $(NF-1) \"\\t\" $0 }'\"'\"' | sort -t. -k1,1n -k2,2n -k3,3n -k4,4n | tail -1 | cut -f2-); exec \"/Users/kuoli-hung/.bun/bin/bun\" \"${plugin_dir}src/index.ts\"'"
+  },
+  "enabledPlugins": {
+    "telegram@claude-plugins-official": true,
+    "claude-hud@claude-hud": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-hud": {
+      "source": {
+        "source": "github",
+        "repo": "jarrodwatts/claude-hud"
+      }
+    }
+  },
+  "language": "traditional chinese",
+  "voiceEnabled": true,
+  "skipDangerousModePermissionPrompt": true
+}
