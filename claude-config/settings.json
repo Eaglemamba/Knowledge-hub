@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cmd=$(jq -r '.tool_input.command // \"\"'); if echo \"$cmd\" | grep -qE 'git push.*(--force|-f)'; then printf '{\"continue\":false,\"stopReason\":\"Force push blocked — remove --force/-f, or run manually to confirm.\"}'; exit 2; fi"
+            "command": "bash /home/user/Knowledge-hub/scripts/pre-push-guard.sh"
           }
         ]
       }
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.command // \"\"' | { read -r cmd; cwd=$(pwd); if echo \"$cwd\" | grep -qi 'health-check'; then if [ -f scripts/generate_dashboard.py ]; then python3 scripts/generate_dashboard.py 2>/dev/null && open reviews/health_dashboard.png 2>/dev/null && echo '{\"systemMessage\": \"Dashboard regenerated and opened for review.\"}'; fi; fi; }",
+            "command": "bash /home/user/Knowledge-hub/scripts/post-push-health.sh",
             "timeout": 30,
             "statusMessage": "Checking health dashboard..."
           },
@@ -52,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [[ \"$OSTYPE\" == \"darwin\"* ]]; then afplay /System/Library/Sounds/Blow.aiff; elif [[ \"$OSTYPE\" == \"msys\" || \"$OSTYPE\" == \"cygwin\" || \"$OSTYPE\" == \"win32\" ]] || grep -qi microsoft /proc/version 2>/dev/null; then powershell.exe -c '[System.Media.SystemSounds]::Exclamation.Play()' 2>/dev/null || rundll32.exe user32.dll,MessageBeep 2>/dev/null; else paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || aplay /usr/share/sounds/sound-icons/trumpet-12.wav 2>/dev/null || true; fi"
+            "command": "bash /home/user/Knowledge-hub/scripts/stop-notify.sh"
           },
           {
             "type": "command",
