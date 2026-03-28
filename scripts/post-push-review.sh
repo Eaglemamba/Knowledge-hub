@@ -181,8 +181,12 @@ cat >> "$REVIEW_FILE" << 'FOOTER'
 </html>
 FOOTER
 
-# Open the review page
-open "$REVIEW_FILE" 2>/dev/null || xdg-open "$REVIEW_FILE" 2>/dev/null || true
+# Open the review page in Chrome
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  open -a "Google Chrome" "$REVIEW_FILE" 2>/dev/null || open "$REVIEW_FILE" 2>/dev/null || true
+else
+  google-chrome "$REVIEW_FILE" 2>/dev/null || chromium-browser "$REVIEW_FILE" 2>/dev/null || xdg-open "$REVIEW_FILE" 2>/dev/null || true
+fi
 
 # Report back to Claude Code
 echo "{\"systemMessage\": \"Push review opened — ${total} file(s) changed: ${html_count} HTML, ${md_count} MD, ${img_count} images.\"}"
