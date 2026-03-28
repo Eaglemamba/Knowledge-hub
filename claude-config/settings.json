@@ -37,6 +37,12 @@
             "command": "jq -r '.tool_input.command // \"\"' | { read -r cmd; cwd=$(pwd); if echo \"$cwd\" | grep -qi 'health-check'; then if [ -f scripts/generate_dashboard.py ]; then python3 scripts/generate_dashboard.py 2>/dev/null && open reviews/health_dashboard.png 2>/dev/null && echo '{\"systemMessage\": \"Dashboard regenerated and opened for review.\"}'; fi; fi; }",
             "timeout": 30,
             "statusMessage": "Checking health dashboard..."
+          },
+          {
+            "type": "command",
+            "command": "bash /home/user/Knowledge-hub/scripts/post-push-review.sh",
+            "timeout": 15,
+            "statusMessage": "Generating push review..."
           }
         ]
       }
