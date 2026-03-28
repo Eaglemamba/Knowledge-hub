@@ -40,6 +40,7 @@ cat > "$REVIEW_FILE" << 'HEADER'
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Push Review</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --orange: #d29922; --purple: #bc8cff; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,6 +69,23 @@ cat > "$REVIEW_FILE" << 'HEADER'
   .summary-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1.5rem; text-align: center; }
   .summary-item .num { font-size: 1.5rem; font-weight: 700; }
   .summary-item .label { font-size: 0.75rem; color: var(--muted); }
+  .md-rendered { padding: 0.5rem; font-size: 0.9rem; }
+  .md-rendered h1, .md-rendered h2, .md-rendered h3 { margin: 1rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+  .md-rendered h1 { font-size: 1.5rem; }
+  .md-rendered h2 { font-size: 1.25rem; }
+  .md-rendered h3 { font-size: 1.1rem; }
+  .md-rendered p { margin: 0.5rem 0; }
+  .md-rendered ul, .md-rendered ol { margin: 0.5rem 0 0.5rem 1.5rem; }
+  .md-rendered li { margin: 0.25rem 0; }
+  .md-rendered code { background: rgba(110,118,129,0.2); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+  .md-rendered pre { background: #1c2128; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 0.5rem 0; }
+  .md-rendered pre code { background: none; padding: 0; }
+  .md-rendered blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--muted); margin: 0.5rem 0; }
+  .md-rendered table { border-collapse: collapse; margin: 0.5rem 0; width: 100%; }
+  .md-rendered th, .md-rendered td { border: 1px solid var(--border); padding: 0.4rem 0.75rem; text-align: left; }
+  .md-rendered th { background: rgba(110,118,129,0.1); }
+  .md-rendered a { color: var(--accent); text-decoration: none; }
+  .md-rendered img { max-width: 100%; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -124,14 +142,15 @@ if [ -n "$MD_FILES" ]; then
 <div class="section">
   <h2><span class="badge badge-md">MD</span> Markdown Updates</h2>
 EOF
+  md_index=0
   while IFS= read -r f; do
     [ -z "$f" ] && continue
     full_path="${REPO_ROOT}/${f}"
-    # Read file content safely and escape HTML
     if [ -f "$full_path" ]; then
-      content=$(sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' "$full_path" | head -100)
+      # Base64 encode to safely embed any MD content without escaping issues
+      content_b64=$(base64 < "$full_path" | tr -d '\n')
     else
-      content="(file not found)"
+      content_b64=$(echo "(file not found)" | base64 | tr -d '\n')
     fi
     cat >> "$REVIEW_FILE" << EOF
   <div class="file-card">
@@ -140,10 +159,22 @@ EOF
       <a class="open-btn" href="file://${full_path}" target="_blank">Open File</a>
     </div>
     <div class="file-card-body">
-      <pre>${content}</pre>
+      <div class="md-rendered" id="md-content-${md_index}"></div>
+      <script>
+        (function(){
+          var raw = atob("${content_b64}");
+          var el = document.getElementById("md-content-${md_index}");
+          if (typeof marked !== 'undefined') {
+            el.innerHTML = marked.parse(raw);
+          } else {
+            el.innerHTML = '<pre>' + raw.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</pre>';
+          }
+        })();
+      </script>
     </div>
   </div>
 EOF
+    md_index=$((md_index + 1))
   done <<< "$MD_FILES"
   echo "</div>" >> "$REVIEW_FILE"
 fi
