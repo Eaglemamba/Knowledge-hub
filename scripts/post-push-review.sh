@@ -183,8 +183,14 @@ FOOTER
 
 # Open the review page in Chrome
 if [[ "$OSTYPE" == "darwin"* ]]; then
+  # macOS
   open -a "Google Chrome" "$REVIEW_FILE" 2>/dev/null || open "$REVIEW_FILE" 2>/dev/null || true
+elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]] || grep -qi microsoft /proc/version 2>/dev/null; then
+  # Windows (Git Bash, Cygwin, MSYS2) or WSL
+  REVIEW_WIN=$(wslpath -w "$REVIEW_FILE" 2>/dev/null || echo "$REVIEW_FILE" | sed 's|^/mnt/\(.\)|\1:|; s|/|\\|g')
+  cmd.exe /c start chrome "$REVIEW_WIN" 2>/dev/null || cmd.exe /c start "" "$REVIEW_WIN" 2>/dev/null || start chrome "$REVIEW_FILE" 2>/dev/null || true
 else
+  # Linux
   google-chrome "$REVIEW_FILE" 2>/dev/null || chromium-browser "$REVIEW_FILE" 2>/dev/null || xdg-open "$REVIEW_FILE" 2>/dev/null || true
 fi
 
