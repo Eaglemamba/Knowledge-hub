@@ -7,7 +7,7 @@ This is the **meta repository** — an index and navigation layer across all of 
 
 | Repo | Domain | Purpose | Key Topics |
 |------|--------|---------|------------|
-| `PDA_Technical-Report-Knowledge` | Pharma | PDA technical report summaries & key takeaways | Aseptic processing, sterilization, container closure, isolators, lyophilization |
+| `SterileGMP-Knowledge-Hub` | Pharma | Multi-source GMP knowledge base — PDA, ISPE, FDA, PIC/S, ISO, ECA | Aseptic processing, sterilization, container closure, isolators, CCS, C&Q, water systems, HVAC |
 | `david-ai-learning` | AI | AI learning notes, tutorials, experiments | Prompt engineering, Claude workflows, AI tools, LLM concepts |
 | `Harvard-Business-Review` | Leadership | HBR article notes & management insights | Leadership, strategy, organizational behavior, decision-making |
 
@@ -16,11 +16,11 @@ This is the **meta repository** — an index and navigation layer across all of 
 These are insights that span multiple repos — the real value of having this index.
 
 ### AI x Pharma
-- Using LLM tools to interpret and apply PDA technical guidance (connects: `david-ai-learning` + `PDA_Technical-Report-Knowledge`)
-- AI-assisted regulatory intelligence and GMP knowledge retrieval
+- Using LLM tools to interpret and apply GMP guidance across PDA, ISPE, FDA, PIC/S (connects: `david-ai-learning` + `SterileGMP-Knowledge-Hub`)
+- AI-assisted regulatory intelligence, cross-source GMP knowledge retrieval, and `/gmp-ask` skill
 
 ### Leadership x Pharma
-- HBR management frameworks applied to CDMO team leadership and operational excellence (connects: `Harvard-Business-Review` + `PDA_Technical-Report-Knowledge`)
+- HBR management frameworks applied to CDMO team leadership and operational excellence (connects: `Harvard-Business-Review` + `SterileGMP-Knowledge-Hub`)
 - Change management principles for AI adoption in manufacturing
 
 ### AI x Leadership
@@ -62,39 +62,61 @@ knowledge-hub/
 When answering any drug product / pharma / GMP question, always follow this format:
 
 ### Required Citations
-- Every key point must cite **PDA TR# + Section X.X.X**
-- Format: **(PDA TR22, Section 3.2)** or **(TR22 §3.2)**
-- Cross-reference other relevant TRs when the topic spans multiple reports
+- Every key point must cite its **source document + Section** (PDA TR#, ISPE Vol#, FDA GFI, Annex 1, ISO #, etc.)
+- Format examples:
+  - **(PDA TR22, Section 3.2)** or **(TR22 §3.2)**
+  - **(ISPE Baseline Vol.5, Section 4.3)** or **(ISPE Vol.5 §4.3)**
+  - **(FDA Aseptic Guide 2004, Section XII)**
+  - **(PIC/S Annex 1 2022, Section 8.5)**
+- Cross-reference other relevant documents when the topic spans multiple sources
 
 ### Answer Template
 ```
 ### [Topic Title]
 
-**[Best Practice Point 1]** — [Summary of guidance] **(PDA TRXX, Section X.X)**
+**[Best Practice Point 1]** — [Summary of guidance] **(Source, Section X.X)**
 
-**[Best Practice Point 2]** — [Summary of guidance] **(PDA TRXX, Section X.X; TRYY §X.X)**
+**[Best Practice Point 2]** — [Summary of guidance] **(Source A §X.X; Source B §X.X)**
 
 ...
 
 **Cross-References:**
-- See also: TR## Section X.X for [related topic]
-- See also: TR## Section X.X for [related topic]
+- See also: [Source] Section X.X for [related topic]
+- See also: [Source] Section X.X for [related topic]
 ```
 
 ### Example
 > **Frequency & Number** — Minimum 3 consecutive successful APS for new facility/line/process
-> qualification **(PDA TR22, Section 3.2)**. Periodic requalification twice per year per line,
-> per shift **(TR22 §3.2)**.
+> qualification **(PDA TR22, Section 3.2)**. ISPE C&Q requires documented URS/FRS as pre-requisite
+> to IQ/OQ **(ISPE Baseline Vol.5 §4.2)**. Annex 1 mandates CCS as overarching framework
+> **(PIC/S Annex 1 2022, Section 4.1)**.
 
 ### Source Repos
-- Primary source: `PDA_Technical-Report-Knowledge/knowledge/` — contains full-text MDs per report
-- Use `knowledge/INDEX.md` for topic routing across reports
+- Primary source: `SterileGMP-Knowledge-Hub/knowledge/` — contains full-text MDs per document
+- Use `knowledge/INDEX.md` for topic routing across all sources
 
-## Knowledge Gaps — Reports to Add
+## Knowledge Gaps — Documents to Add
 
+### PDA
 | Report | Title | Why Needed | Referenced By |
 |--------|-------|------------|---------------|
-| TR51 | Biological Indicators for Gas and Vapor-Phase Decontamination Processes: Specification, Manufacture, Control and Use | Core reference for VPHP cycle development — D-value calculations, BI placement strategies, cycle parameter optimization | PtC-12 §Q7.2, Guide No.1 §10.2 |
+| TR51 | Biological Indicators for Gas and Vapor-Phase Decontamination Processes | Core reference for VPHP cycle development — D-value, BI placement, cycle parameters | PtC-12 §Q7.2, Guide No.1 §10.2 |
+
+### ISPE (priority order)
+| Document | Title | Why Needed |
+|----------|-------|------------|
+| ISPE Baseline Vol.5 C&Q (2nd Ed.) | Commissioning & Qualification | Foundational C&Q framework — IQ/OQ/PQ/FAT/SAT |
+| ISPE Baseline Vol.7 | Risk-Based Manufacture | Risk-based approach to pharma manufacturing |
+| ISPE Baseline Vol.3 | Sterile Manufacturing Facilities | Facility design for sterile products |
+| ISPE Baseline Vol.4 | Water & Steam Systems | WFI/PW/clean steam |
+| ISPE GAMP 5 | Computerized Systems Validation | CSV framework for pharma IT systems |
+| ISPE GPG HVAC | HVAC for Pharmaceutical Facilities | Cleanroom design, pressure cascades, AHU |
+
+### Regulatory
+| Document | Body | Why Needed |
+|----------|------|------------|
+| FDA Aseptic Processing Guidance (2004) | FDA | US baseline for aseptic manufacturing |
+| PIC/S Annex 1 (2022) | PIC/S | EU GMP sterile mfg — biggest 2022 update |
 
 ## Conventions
 - All notes in Markdown
