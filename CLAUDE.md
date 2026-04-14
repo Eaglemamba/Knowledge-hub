@@ -7,7 +7,7 @@ This is the **meta repository** — an index and navigation layer across all of 
 
 | Repo | Domain | Purpose | Key Topics |
 |------|--------|---------|------------|
-| `SterileGMP-Knowledge-Hub` | Pharma | Multi-source GMP knowledge base — PDA, ISPE, FDA, PIC/S, ISO, ECA | Aseptic processing, sterilization, container closure, isolators, CCS, C&Q, water systems, HVAC |
+| `SterileGMP-Knowledge-Hub` | Pharma | Multi-source GMP knowledge base — PDA, ISPE, FDA, PIC/S, ICH, USP, ISO, ECA | Aseptic processing, sterilization, container closure, isolators, CCS, C&Q, water systems, HVAC |
 | `david-ai-learning` | AI | AI learning notes, tutorials, experiments | Prompt engineering, Claude workflows, AI tools, LLM concepts |
 | `Harvard-Business-Review` | Leadership | HBR article notes & management insights | Leadership, strategy, organizational behavior, decision-making |
 
@@ -16,7 +16,7 @@ This is the **meta repository** — an index and navigation layer across all of 
 These are insights that span multiple repos — the real value of having this index.
 
 ### AI x Pharma
-- Using LLM tools to interpret and apply GMP guidance across PDA, ISPE, FDA, PIC/S (connects: `david-ai-learning` + `SterileGMP-Knowledge-Hub`)
+- Using LLM tools to interpret and apply GMP guidance across PDA, ISPE, FDA, PIC/S, ICH, USP, ISO (connects: `david-ai-learning` + `SterileGMP-Knowledge-Hub`)
 - AI-assisted regulatory intelligence, cross-source GMP knowledge retrieval, and `/gmp-ask` skill
 
 ### Leadership x Pharma
